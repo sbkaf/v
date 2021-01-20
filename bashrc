@@ -1,0 +1,20 @@
+#CUSTOM
+# Disable ctrl-s
+stty -ixon
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;30m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\n\$ '
+alias l='ls -AFh --group-directories-first'
+alias gst='git status'
+alias gdi='git diff'
+alias gco='git commit'
+alias gad='git add'
+alias glo='git log'
+alias gpl='git pull'
+alias gps='git push'
+alias gch='git checkout'
+alias gbr='git branch'
+alias m='make'
+alias v='vim'
+alias vd='vimdiff'
+alias vm='vim Makefile'
+alias c.='cd ..'
+alias c='cd'
