@@ -69,11 +69,12 @@ set scrolloff=5
 " leave insert mode
 imap jj <esc>
 imap ,. <esc>
-" clipboard
+" clipboard, copy and paste
 vmap ,y "+y
 imap ,p <esc>"+pi
 nnoremap ,p "+p
 nnoremap ,y "+y
+nnoremap yp yyp
 " buffers
 nnoremap ,e :Ex<cr>
 nnoremap ,x :bd<cr>
