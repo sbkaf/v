@@ -13,12 +13,18 @@ set completeopt-=preview
 " error format for JavaScript
 set errorformat=\ \ \ \ \ \ at\ %m\ (%f:%l:%c)
 
+" set indent behavior
+"   especially no auto leader comment
+set formatoptions=tcq
+
 " hot keys for vim configuration
 noremap ,,v :e ~/.vimrc<cr>
 noremap ,,s :source ~/.vimrc<cr>
 noremap ,,o :syntax off
 
 "" Tools
+" Replace colon with newline
+noremap ,k :'<,'>s/, /,<c-v><cr>/g<cr>
 " Refactoring
 noremap ,r viw"9y:%s/\<<c-r>9\>/<c-r>9/gc<left><left><left>
 " Search in project
@@ -61,7 +67,7 @@ nnoremap ,ga :!git add
 nnoremap ,gps :!git push origin master
 nnoremap ,gpl :!git pull origin master
 " show good line end
-set colorcolumn=40
+"set colorcolumn=40
 " scroll
 nnoremap J 20j10k
 nnoremap K 20k10j
@@ -129,8 +135,9 @@ inoremap << <
 inoremap `` `
 inoremap '' '
 inoremap "" "
-"" (() => {})
+"" ((x => {})
 inoremap (() (() => )<left>
+inoremap ((} (({}) => {<return>})<esc><up>I<right><right><right>
 "" delete
 inoremap {<bs> {<bs>
 inoremap (<bs> (<bs>
@@ -147,6 +154,7 @@ noremap ,spen :setlocal spell spelllang=en_us
 noremap ,spde :setlocal spell spelllang=de
 " language specific
 "" JavaScript
+noremap ,t :!node test.js<cr>
 inoremap ,+ ' +  + '<left><left><left><left>
 inoremap ,me module.exports = 
 imap ,i if () {<cr>4li
@@ -167,6 +175,14 @@ autocmd FileType python     inoremap <buffer> """ """
 "" PHP
 autocmd FileType php        inoremap <buffer> print_r echo"<pre>";print_r();echo"</pre>";<esc>14hi
 "" Markdown
+inoremap ,1 #
+inoremap ,2 ##
+inoremap ,3 ###
+inoremap ,4 ####
+inoremap ,5 #####
+inoremap ,6 ######
+inoremap ,7 #######
+inoremap ,8 ########
 nmap ,1 V:s/^#* \?/# /<cr>:nohl<cr>
 nmap ,2 V:s/^#* \?/## /<cr>:nohl<cr>
 nmap ,3 V:s/^#* \?/### /<cr>:nohl<cr>
@@ -187,15 +203,56 @@ inoremap link<tab> [name]()<left>
 inoremap code<tab> ```<cr>```<up>
 """ task
 inoremap t<tab> - [ ] 
+inoremap ,t - [ ] 
 function ToggleTaskX()
   if getline('.') =~ '^ *- \[ '
-    execute 's/- \[ \]/- [x]'
+    execute 's/^ *- \[ \]/- [x]'
     call cursor(line('.') + 1, 0)
   elseif getline('.') =~ '^ *- \[x'
-    execute 's/- \[x\]/- [ ]'
+    execute 's/^ *- \[x\]/- [ ]'
+    call cursor(line('.') + 1, 0)
+  elseif getline('.') =~ '^ *- '
+    execute 's/^ *- /- [ ] '
     call cursor(line('.') + 1, 0)
   elseif getline('.') =~ '^- \[ \]'
     echomsg 'the current line is no task'
   endif
 endfunction
 nmap <tab> :call ToggleTaskX()<cr>
+
+" from https://zserge.com/posts/vim-distraction-free/
+let g:dfm_width = 80 "absolute width or percentage, like 0.7
+let g:dfm_height = 0.8
+let s:dfm_enabled = 0
+function! ToggleDistractionFreeMode()
+  let l:w = g:dfm_width > 1 ? g:dfm_width : (winwidth('%') * g:dfm_width)
+  let l:margins = {
+	\ "l": ("silent leftabove " . float2nr((winwidth('%') - l:w) / 2 - 1) . " vsplit new"),
+	\ "h": ("silent rightbelow " . float2nr((winwidth('%') - l:w) / 2 - 1) . " vsplit new"),
+	\ "j": ("silent leftabove " . float2nr(winheight('%') * (1 - g:dfm_height) / 2 - 1) . " split new"),
+	\ "k": ("silent rightbelow " . float2nr(winheight('%') * (1 - g:dfm_height) / 2 - 1) . " split new"),
+	\ }
+  if (s:dfm_enabled == 0)
+    set nonumber
+    let s:dfm_enabled = 1
+    for key in keys(l:margins)
+      execute l:margins[key] . " | wincmd " . key
+    endfor
+    for key in ['NonText', 'VertSplit', 'StatusLine', 'StatusLineNC']
+      execute 'hi ' . key . ' ctermfg=bg ctermbg=bg cterm=NONE'
+    endfor
+    set wrap | set linebreak
+    map j gj
+    map k gk
+  else
+    let s:dfm_enabled = 0
+    for key in keys(l:margins)
+      execute "wincmd " . key . " | close "
+    endfor
+    set nowrap | set nolinebreak
+    unmap j
+    unmap k
+    set number
+  endif
+endfunction
+nnoremap ,z :call ToggleDistractionFreeMode()<CR>
