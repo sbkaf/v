@@ -16,6 +16,8 @@ set errorformat=\ \ \ \ \ \ at\ %m\ (%f:%l:%c)
 " set indent behavior
 "   especially no auto leader comment
 set formatoptions=tcq
+"   decrease indentation with backspace
+set backspace=indent,eol,start
 
 " hot keys for vim configuration
 noremap ,,v :e ~/.vimrc<cr>
@@ -61,7 +63,7 @@ noremap ,. :<up>
 " git
 nnoremap ,gs :!git status<cr>
 nnoremap ,gd :!git diff<cr>
-nnoremap ,gc :!git commit -am ""<left>
+nnoremap ,gc :!git commit -m ""<left>
 nnoremap ,gl :!echo -e "\n\n---\n\n"<cr>:!git log -3<cr>
 nnoremap ,ga :!git add 
 nnoremap ,gps :!git push origin master
@@ -135,8 +137,9 @@ inoremap << <
 inoremap `` `
 inoremap '' '
 inoremap "" "
-"" ((x => {})
+"" (() => {})
 inoremap (() (() => )<left>
+"" (({}) => {})
 inoremap ((} (({}) => {<return>})<esc><up>I<right><right><right>
 "" delete
 inoremap {<bs> {<bs>
@@ -153,14 +156,14 @@ inoremap <c-l> <right>
 noremap ,spen :setlocal spell spelllang=en_us
 noremap ,spde :setlocal spell spelllang=de
 " language specific
+noremap ;M :make<cr>
 "" JavaScript
-noremap ,t :!node test.js<cr>
 inoremap ,+ ' +  + '<left><left><left><left>
 inoremap ,me module.exports = 
 imap ,i if () {<cr>4li
 inoremap ,r require('')<left><left>
-inoremap ,c // TODO remove logconsole.log()<left>
-inoremap ,C // TODO remove logconsole.log('')<left><left>
+inoremap ,c // TODO remove log<cr>console.log()<left>
+inoremap ,C // TODO remove log<cr>console.log(JSON.stringify(, null, 2))<esc>10hi
 inoremap ,f function ()<left><left>
 inoremap r<tab> return 
 inoremap cl<tab> class 
