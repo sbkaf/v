@@ -7,6 +7,9 @@ colo torte
 " do not imitate vi
 set nocompatible
 
+" browse code with mouse
+set mouse=n
+
 " YouCompleteMe
 set completeopt-=preview
 
@@ -26,7 +29,7 @@ noremap ,,o :syntax off
 
 "" Tools
 " Replace colon with newline
-noremap ,k :'<,'>s/, /,<c-v><cr>/g<cr>
+noremap ,k :s/,/,<c-v><cr>/g<cr>
 " Refactoring
 noremap ,r viw"9y:%s/\<<c-r>9\>/<c-r>9/gc<left><left><left>
 " Search in project
@@ -63,7 +66,7 @@ noremap ,. :<up>
 " git
 nnoremap ,gs :!git status<cr>
 nnoremap ,gd :!git diff<cr>
-nnoremap ,gc :!git commit -m ""<left>
+nnoremap ,gc :!git commit -am ""<left>
 nnoremap ,gl :!echo -e "\n\n---\n\n"<cr>:!git log -3<cr>
 nnoremap ,ga :!git add 
 nnoremap ,gps :!git push origin master
@@ -178,6 +181,7 @@ autocmd FileType python     inoremap <buffer> """ """
 "" PHP
 autocmd FileType php        inoremap <buffer> print_r echo"<pre>";print_r();echo"</pre>";<esc>14hi
 "" Markdown
+autocmd FileType markdown   nmap <tab> :call ToggleTaskX()<cr>
 inoremap ,1 #
 inoremap ,2 ##
 inoremap ,3 ###
@@ -209,19 +213,18 @@ inoremap t<tab> - [ ]
 inoremap ,t - [ ] 
 function ToggleTaskX()
   if getline('.') =~ '^ *- \[ '
-    execute 's/^ *- \[ \]/- [x]'
+    execute 's/^\( *\)- \[ \]/\1- [x]'
     call cursor(line('.') + 1, 0)
   elseif getline('.') =~ '^ *- \[x'
-    execute 's/^ *- \[x\]/- [ ]'
+    execute 's/^\( *\)- \[x\]/\1- [ ]'
     call cursor(line('.') + 1, 0)
   elseif getline('.') =~ '^ *- '
-    execute 's/^ *- /- [ ] '
+    execute 's/^\( *\)- /\1- [ ] '
     call cursor(line('.') + 1, 0)
   elseif getline('.') =~ '^- \[ \]'
     echomsg 'the current line is no task'
   endif
 endfunction
-nmap <tab> :call ToggleTaskX()<cr>
 
 " from https://zserge.com/posts/vim-distraction-free/
 let g:dfm_width = 80 "absolute width or percentage, like 0.7
