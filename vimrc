@@ -174,6 +174,7 @@ inoremap c<tab> const
 inoremap co<tab> constructor() {<cr>}<up><esc>$<left><left>
 inoremap it<tab> it('', function () {<cr>})<up><right><right>
 inoremap de<tab> describe('', function () {<cr>})<up><esc>f'a
+autocmd FileType javascript nmap gd viw"9y/  <c-r>9(\\|function <c-r>9(\\|class <c-r>9<cr>
 "" TypeScript
 autocmd BufRead,BufNewFile *.ts set filetype=typescript
 "" Python
