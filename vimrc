@@ -10,6 +10,9 @@ set nocompatible
 " browse code with mouse
 set mouse=n
 
+" ctags
+noremap <c-p> <c-]>
+
 " YouCompleteMe
 set completeopt-=preview
 
@@ -177,6 +180,12 @@ inoremap de<tab> describe('', function () {<cr>})<up><esc>f'a
 autocmd FileType javascript nmap gd viw"9y/  <c-r>9(\\|function <c-r>9(\\|class <c-r>9<cr>
 "" TypeScript
 autocmd BufRead,BufNewFile *.ts set filetype=typescript
+"" C
+autocmd FileType c          inoremap ,c printf("");<left><left><left>
+autocmd FileType c          inoremap (; ();<left><left>
+autocmd FileType c          set tabstop=4
+autocmd FileType c          set shiftwidth=4
+autocmd FileType c          set sts=4
 "" Python
 autocmd FileType python     inoremap <buffer> """ """
 "" PHP
@@ -229,7 +238,7 @@ endfunction
 
 " from https://zserge.com/posts/vim-distraction-free/
 let g:dfm_width = 80 "absolute width or percentage, like 0.7
-let g:dfm_height = 0.8
+let g:dfm_height = 1
 let s:dfm_enabled = 0
 function! ToggleDistractionFreeMode()
   let l:w = g:dfm_width > 1 ? g:dfm_width : (winwidth('%') * g:dfm_width)
